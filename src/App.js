@@ -1,74 +1,54 @@
-import './App.css';
-import '@fortawesome/fontawesome-free/css/all.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import AddButton from './coponents/AddButton';
+import "./App.css";
+import "@fortawesome/fontawesome-free/css/all.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import AddButton from "./coponents/AddButton";
+import ToDoItem from "./coponents/ToDoItem";
+import { v4 as uuidv4 } from "uuid";
+import React, { useState } from "react";
 
 function App() {
-const data = [
-  {id, title: 'Learning', completed: true},
-  {id, title: 'Shopping', completed: false}
-]
+  const [dataList, setDataList] = useState([
+    { id: uuidv4(), title: "Learning", completed: false},
+    { id: uuidv4(), title: "Shopping", completed: false}
+  ]);
+
+  const [text, setText] = useState("");
+  const showEditMode = (index) => {
+  }
+  
+  const newTodo = () => {
+    const newList = { id: uuidv4(), title: text, completed: false}
+//set state เพิ่มข้อมูล 
+setDataList([newList, ...dataList])
+    //setstate when insert todolist will disappear
+setText('')
+  }
+//state for clear
+  const clearText = () => {
+    setText('')
+  }
+
+  //state deleteitem use filter to map with the different of item
+const delText = (id) => {
+const filteredData = dataList.filter(item => item !== id )
+setDataList(filteredData)
+}
+
 
 
   return (
-     <div className="container pt-5" style={{ maxWidth: 576 }}>
+    <div className="container pt-5" style={{ maxWidth: 576 }}>
       
-      <form>
-        <div className="input-group">
-          <input type="text" className="form-control" />
-          <button className="btn btn-primary">
-            <i className="fa-solid fa-check" />
-          </button>
-          <button className="btn btn-secondary">
-            <i className="fa-solid fa-xmark" />
-          </button>
-        </div>
-      </form>
+        <AddButton onSubmit={newTodo} onChange={(e) => setText(e.target.value)} onClick={clearText} content={text}></AddButton>
+      
       <br />
-      <ul className="list-group">
-        <li className="list-group-item p-3 text-bg-danger">
-          <div className="d-flex align-items-center">
-            <span className="flex-fill">Play game</span>
-            <div className="btn-group">
-              <button className="btn btn-outline-light">
-                <i className="fa-solid fa-repeat" />
-              </button>
-              <button className="btn btn-outline-light">
-                <i className="fa-regular fa-trash-can" />
-              </button>
-            </div>
-          </div>
-        </li>
-        <li className="list-group-item p-3">
-          <form>
-            <div className="input-group">
-              <input type="text" className="form-control" value="Play game" />
-              <button className="btn btn-primary">
-                <i className="fa-solid fa-check" />
-              </button>
-              <button className="btn btn-secondary">
-                <i className="fa-solid fa-xmark" />
-              </button>
-            </div>
-          </form>
-        </li>
-        <li className="list-group-item p-3 text-bg-success">
-          <div className="d-flex align-items-center">
-            <span className="flex-fill">Meet the dentist</span>
-            <div className="btn-group">
-              <button className="btn btn-outline-light">
-                <i className="fa-solid fa-repeat" />
-              </button>
-              <button className="btn btn-outline-light">
-                <i className="fa-regular fa-trash-can" />
-              </button>
-            </div>
-          </div>
-        </li>
-      </ul>
+      
+        {dataList.map((data, index) => 
+          <ToDoItem key={data.id} editMode={data.isEditMode} textText={data.title} onClick={ () => delText(data)} />
+        )}
+    
     </div>
   );
-  
 }
 
 export default App;
